@@ -33,6 +33,16 @@ defmodule Exagon.MixProject do
         "coveralls.detail": :test,
         "coveralls.post": :test,
         "coveralls.html": :test
+      ],
+      name: "Exagon",
+      source_url: "https://gitlab.com/ex_agon/exagon",
+      homepage_url: "https://gitlab.com/ex_agon/exagon",
+      package: [
+        maintainers: ["Nicolas Jouanin"],
+        licenses: ["Apache-2.0"],
+        links: %{
+          "Source" => "https://gitlab.com/ex_agon/exagon"
+        }
       ]
     ]
   end
