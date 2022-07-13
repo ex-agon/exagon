@@ -1,19 +1,16 @@
 # Exagon
 
-To start your Phoenix server:
+Exagon is an open source home automation software written in [Elixir](https://elixir-lang.org). 
 
-  * Install dependencies with `mix deps.get`
-  * Create and migrate your database with `mix ecto.setup`
-  * Start Phoenix endpoint with `mix phx.server` or inside IEx with `iex -S mix phx.server`
+It provides features like:
+ - integration with various IoT devices and platform
+ - collecting, measuring data or sending commandes from/to IoT devices
+ - setup devices and home configuration
+ - automation through set of user defined rules, external conditions and data analysis
+ - and more ideas coming ...
 
-Now you can visit [`localhost:4000`](http://localhost:4000) from your browser.
+Exagon is written in Elixir/Phoenix and Beam VM. This architecture allow flexible user interface (Web, Smartphone App, CLI) as well as horizontal scalability.
 
-Ready to run in production? Please [check our deployment guides](https://hexdocs.pm/phoenix/deployment.html).
+## News
 
-## Learn more
-
-  * Official website: https://www.phoenixframework.org/
-  * Guides: https://hexdocs.pm/phoenix/overview.html
-  * Docs: https://hexdocs.pm/phoenix
-  * Forum: https://elixirforum.com/c/phoenix-forum
-  * Source: https://github.com/phoenixframework/phoenix
+Exagon is still in early stages and has nothing demonstrable. If you will to contribute to this project or learn more about it, please contact us with [Matrix](https://matrix.org) on [`#exagon:matrix.org`](https://matrix.to/#/#exagon:matrix.org).
