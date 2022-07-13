@@ -1,0 +1,82 @@
+default:
+  before_script:
+    - apt-get update && apt-get -y install postgresql-client git
+    - mix local.rebar --force
+    - mix local.hex --force
+    - mix deps.clean --unused
+    - mix deps.get
+
+services:
+  - postgres:latest
+
+variables:
+  POSTGRES_DB: exagon_test
+  POSTGRES_HOST: postgres
+  POSTGRES_USER: postgres
+  POSTGRES_PASSWORD: "postgres"
+  POSTGRES_PORT: 5432
+  MIX_ENV: "test"
+
+cache:
+  key: ${CI_COMMIT_REF_SLUG}
+  paths:
+    - deps
+    - _build
+
+test:1.12:
+  image: elixir:1.12
+  script:
+    - export MIX_ENV=test
+    - env
+    - mix ecto.drop
+    - mix ecto.create
+    - mix ecto.migrate
+    - mix test --trace
+    - mix coveralls
+  cache:
+    key: "1.12"
+    paths:
+      - deps/
+      - _build/
+
+test:1.13:
+  image: elixir:1.13
+  script:
+    - export MIX_ENV=test
+    - env
+    - mix ecto.drop
+    - mix ecto.create
+    - mix ecto.migrate
+    - mix test --trace
+    - mix coveralls
+  cache:
+    key: "1.13"
+    paths:
+      - deps/
+      - _build/
+
+test:latest:
+  image: elixir:latest
+  script:
+    - export MIX_ENV=test
+    - env
+    - mix ecto.drop
+    - mix ecto.create
+    - mix ecto.migrate
+    - mix test --trace
+    - mix coveralls
+  cache:
+    key: "latest"
+    paths:
+      - deps/
+      - _build/
+
+format:
+  image: elixir:1.13
+  script:
+    - mix format --check-formatted
+  cache:
+    key: "1.13"
+    paths:
+      - deps/
+      - _build/
