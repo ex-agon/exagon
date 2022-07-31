@@ -1,0 +1,10 @@
+image:
+  file: gitpod/.gitpod.dockerfile
+ports:
+  - port: 4000
+    onOpen: open-preview
+vscode:
+  extensions:
+    - JakeBecker.elixir-ls
+    - phoenixframework.phoenix
+    - bradlc.vscode-tailwindcss
