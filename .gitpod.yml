@@ -3,6 +3,9 @@ image:
 ports:
   - port: 4000
     onOpen: open-preview
+tasks:
+  - name: InitEnv
+    init: gitpod/init.sh    
 vscode:
   extensions:
     - JakeBecker.elixir-ls
