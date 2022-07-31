@@ -14,11 +14,17 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 
-defmodule ExagonWeb.PageControllerTest do
-  use ExagonWeb.ConnCase
+defmodule Exagon.Schema do
+  defmacro __using__(_) do
+    quote do
+      use Ecto.Schema
+      @timestamps_opts type: :utc_datetime_usec
+      @primary_key {:id, :binary_id, autogenerate: true}
+      @foreign_key_type :binary_id
 
-  test "GET /", %{conn: conn} do
-    conn = get(conn, "/")
-    assert html_response(conn, 200) =~ "Welcome to Phoenix!"
+      import Ecto
+      import Ecto.Changeset
+      import Ecto.Query
+    end
   end
 end

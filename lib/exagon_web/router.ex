@@ -26,17 +26,12 @@ defmodule ExagonWeb.Router do
     plug :put_root_layout, {ExagonWeb.LayoutView, :root}
     plug :protect_from_forgery
     plug :put_secure_browser_headers
+    plug :require_admin_user
     plug :fetch_current_user
   end
 
   pipeline :api do
     plug :accepts, ["json"]
-  end
-
-  scope "/", ExagonWeb do
-    pipe_through :browser
-
-    get "/", PageController, :index
   end
 
   # Other scopes may use custom stacks.
@@ -91,6 +86,7 @@ defmodule ExagonWeb.Router do
   scope "/", ExagonWeb do
     pipe_through [:browser, :require_authenticated_user]
 
+    get "/", PageController, :index
     get "/users/settings", UserSettingsController, :edit
     put "/users/settings", UserSettingsController, :update
     get "/users/settings/confirm_email/:token", UserSettingsController, :confirm_email

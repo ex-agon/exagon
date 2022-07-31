@@ -521,4 +521,40 @@ defmodule Exagon.AccountsTest do
       refute inspect(%User{password: "123456"}) =~ "password: \"123456\""
     end
   end
+
+  describe "role management" do
+    setup do
+      %{user: user_fixture()}
+    end
+
+    test "fails if user doesn't exists" do
+      assert {:error, changeset} =
+               Accounts.add_user_role(%User{id: Ecto.UUID.generate()}, "some_role")
+
+      assert changeset.valid? == false
+    end
+
+    test "add some role to an existing user", %{user: user} do
+      assert {:ok, role} = Accounts.add_user_role(user, "test_role")
+      assert role.role_name == "test_role"
+    end
+
+    test "is_admin/1 with admin user", %{user: user} do
+      assert {:ok, _} = Accounts.add_user_role(user, "admin")
+      assert Accounts.user_is_admin?(user) == true
+    end
+
+    test "is_admin/1 with non admin user", %{user: user} do
+      assert Accounts.user_is_admin?(user) == false
+    end
+
+    test "has_admin?/0 returns false when no admin exists" do
+      assert Accounts.has_admin?() == false
+    end
+
+    test "has_admin?/0 returns true when admin exists", %{user: user} do
+      assert {:ok, _} = Accounts.add_user_role(user, "admin")
+      assert Accounts.has_admin?() == true
+    end
+  end
 end

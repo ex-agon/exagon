@@ -3,10 +3,13 @@ defmodule Exagon.Accounts do
   The Accounts context.
   """
 
+  @admin_role "admin"
+
   import Ecto.Query, warn: false
+  import Ecto.Changeset
   alias Exagon.Repo
 
-  alias Exagon.Accounts.{User, UserToken, UserNotifier}
+  alias Exagon.Accounts.{User, UserToken, UserNotifier, Role}
 
   ## Database getters
 
@@ -349,5 +352,56 @@ defmodule Exagon.Accounts do
       {:ok, %{user: user}} -> {:ok, user}
       {:error, :user, changeset, _} -> {:error, changeset}
     end
+  end
+
+  @doc """
+  Get a user roles
+  """
+  def get_user_roles(user) do
+    Ecto.assoc(user, :roles) |> Repo.all()
+  end
+
+  @doc """
+  Checks if the given user has an "admin" role
+  """
+  def user_has_role?(user, role_name) do
+    query =
+      from u in User,
+        join: r in assoc(u, :roles),
+        where: u.id == ^user.id and r.role_name == ^role_name,
+        preload: [:roles]
+
+    Repo.exists?(query)
+  end
+
+  def user_is_admin?(user), do: user_has_role?(user, @admin_role)
+
+  @doc """
+  Add a role to a user
+  """
+  def add_user_role(user, role_name) do
+    case Repo.get(User, user.id) do
+      nil ->
+        error = change(user) |> add_error(:id, "no user found with this id", id: user.id)
+        {:error, error}
+
+      user ->
+        Ecto.build_assoc(user, :roles)
+        |> Role.create_changeset(%{role_name: role_name})
+        |> Repo.insert()
+    end
+  end
+
+  @doc """
+  Checks if at least one user exists with the admin role.
+  """
+  def has_admin?() do
+    query =
+      from u in User,
+        join: r in assoc(u, :roles),
+        where: r.role_name == @admin_role,
+        preload: [:roles]
+
+    Repo.exists?(query)
   end
 end

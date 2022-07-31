@@ -15,6 +15,7 @@
 # SPDX-License-Identifier: Apache-2.0
 
 defmodule ExagonWeb.UserAuth do
+  import ExagonWeb.Gettext
   import Plug.Conn
   import Phoenix.Controller
 
@@ -152,6 +153,23 @@ defmodule ExagonWeb.UserAuth do
       |> maybe_store_return_to()
       |> redirect(to: Routes.user_session_path(conn, :new))
       |> halt()
+    end
+  end
+
+  @doc """
+  Requires that an admin user exists otherwise redirect to register page
+  """
+  def require_admin_user(conn, _opts) do
+    if Accounts.has_admin?() do
+      conn
+    else
+      conn
+      |> put_flash(
+        :error,
+        ExagonWeb.Gettext.gettext(
+          "Exagon has not been configured yet. Please register an admin account first"
+        )
+      )
     end
   end
 
