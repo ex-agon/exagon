@@ -10,23 +10,26 @@
         </h2>
         <p class="mt-2 text-sm text-gray-600">
           <%= gettext("Or") %>
-        <%= link(gettext("register now"), to: Routes.user_registration_path(@conn, :new), class: "font-medium text-indigo-600 hover:text-indigo-500") %>
+          <%= link(gettext("register now"),
+            to: Routes.user_registration_path(@conn, :new),
+            class: "font-medium text-indigo-600 hover:text-indigo-500"
+          ) %>
         </p>
       </div>
       <div class="mt-6">
         <%= if @error_message do %>
-        <div class="rounded-md bg-red-50 p-4">
+          <div class="rounded-md bg-red-50 p-4">
             <div class="flex">
-                <div class="flex-shrink-0">
-                    <%= Heroicons.icon("x-circle", type: "solid", class: "h-5 w-5 text-red-400") %>
-                </div>
-                <div class="ml-3">
-                    <h3 class="text-sm font-medium text-red-800">
-                        <%= @error_message %>
-                    </h3>
-                </div>
+              <div class="flex-shrink-0">
+                <%= Heroicons.icon("x-circle", type: "solid", class: "h-5 w-5 text-red-400") %>
+              </div>
+              <div class="ml-3">
+                <h3 class="text-sm font-medium text-red-800">
+                  <%= @error_message %>
+                </h3>
+              </div>
             </div>
-        </div>
+          </div>
         <% end %>
         <.form
           let={f}
