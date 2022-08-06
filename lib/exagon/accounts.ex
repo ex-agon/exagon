@@ -4,12 +4,13 @@ defmodule Exagon.Accounts do
   """
 
   @admin_role "admin"
+  @owner_role "owner"
 
   import Ecto.Query, warn: false
   import Ecto.Changeset
   alias Exagon.Repo
 
-  alias Exagon.Accounts.{User, UserToken, UserNotifier, Role}
+  alias Exagon.Accounts.{User, UserToken, UserNotifier, Role, Workplace}
 
   ## Database getters
 
@@ -368,7 +369,7 @@ defmodule Exagon.Accounts do
     query =
       from u in User,
         join: r in assoc(u, :roles),
-        where: u.id == ^user.id and r.role_name == ^role_name,
+        where: u.id == ^user.id and r.name == ^role_name,
         preload: [:roles]
 
     Repo.exists?(query)
@@ -387,7 +388,7 @@ defmodule Exagon.Accounts do
 
       user ->
         Ecto.build_assoc(user, :roles)
-        |> Role.create_changeset(%{role_name: role_name})
+        |> Role.create_changeset(%{name: role_name})
         |> Repo.insert()
     end
   end
@@ -399,9 +400,75 @@ defmodule Exagon.Accounts do
     query =
       from u in User,
         join: r in assoc(u, :roles),
-        where: r.role_name == @admin_role,
+        where: r.name == @admin_role,
         preload: [:roles]
 
     Repo.exists?(query)
+  end
+
+  @doc """
+  Create a workspace and link to a user with the given role name
+  """
+  def add_workplace(user, workplace_name, role_name) when is_binary(workplace_name) do
+    case Repo.get(User, user.id) do
+      nil ->
+        error = change(user) |> add_error(:id, "no user found with this id", id: user.id)
+        {:error, error}
+
+      user ->
+        multi =
+          Ecto.Multi.new()
+          |> Ecto.Multi.insert(
+            :workplace,
+            Workplace.create_changeset(%Workplace{name: workplace_name})
+          )
+          |> Ecto.Multi.insert(
+            :role,
+            fn %{workplace: workplace} ->
+              Ecto.build_assoc(user, :roles)
+              |> Role.create_changeset(%{name: role_name})
+              |> Ecto.Changeset.put_assoc(:workplace, workplace)
+            end
+          )
+          |> Exagon.Repo.transaction()
+
+        case multi do
+          {:ok, %{workplace: workplace, role: role}} -> {:ok, workplace, role}
+          {:error, _, failed_value, _} -> {:error, failed_value}
+        end
+    end
+  end
+
+  def add_workplace(user, %Workplace{} = workplace, role_name) do
+    case [Repo.get(User, user.id), Repo.get(Workplace, workplace.id)] do
+      [nil, _] ->
+        error = change(user) |> add_error(:id, "no user found with this id", id: user.id)
+        {:error, error}
+
+      [_, nil] ->
+        error =
+          change(workplace) |> add_error(:id, "no workplace found with this id", id: workplace.id)
+
+        {:error, error}
+
+      [user, workplace] ->
+        result =
+          Ecto.build_assoc(user, :roles)
+          |> Role.create_changeset(%{name: role_name})
+          |> Ecto.Changeset.put_assoc(:workplace, workplace)
+          |> Exagon.Repo.insert()
+
+        case result do
+          {:ok, role} -> {:ok, role, workplace}
+          error -> error
+        end
+    end
+  end
+
+  @doc """
+  Create a workspace and link to its owner
+  """
+  def create_workplace(owner, workplace_name) do
+    add_workplace(owner, workplace_name, @owner_role)
   end
 end

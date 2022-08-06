@@ -529,14 +529,18 @@ defmodule Exagon.AccountsTest do
 
     test "fails if user doesn't exists" do
       assert {:error, changeset} =
-               Accounts.add_user_role(%User{id: Ecto.UUID.generate()}, "some_role")
+               Accounts.add_user_role(%User{id: Ecto.UUID.generate()}, "admin")
 
       assert changeset.valid? == false
     end
 
     test "add some role to an existing user", %{user: user} do
-      assert {:ok, role} = Accounts.add_user_role(user, "test_role")
-      assert role.role_name == "test_role"
+      assert {:ok, role} = Accounts.add_user_role(user, "admin")
+      assert role.name == "admin"
+    end
+
+    test "add unexpected role to an existing user", %{user: user} do
+      assert {:error, _} = Accounts.add_user_role(user, "some role")
     end
 
     test "is_admin/1 with admin user", %{user: user} do
@@ -555,6 +559,31 @@ defmodule Exagon.AccountsTest do
     test "has_admin?/0 returns true when admin exists", %{user: user} do
       assert {:ok, _} = Accounts.add_user_role(user, "admin")
       assert Accounts.has_admin?() == true
+    end
+  end
+
+  describe "workplace management" do
+    setup do
+      %{user: user_fixture()}
+    end
+
+    test "create_workplace/2 fails if user doesn't exists" do
+      assert {:error, changeset} =
+               Accounts.create_workplace(%User{id: Ecto.UUID.generate()}, "some workplace")
+
+      assert changeset.valid? == false
+    end
+
+    test "create_workplace/2 succeed for a user with no workplace", %{user: user} do
+      assert {:ok, workplace, role} = Accounts.create_workplace(user, "some workplace")
+      assert workplace.name == "some workplace"
+      assert role.name == "owner"
+    end
+
+    test "create_workplace/2 fails to add a workplace if it is already linked with a existing role",
+         %{user: user} do
+      assert {:ok, workplace, _} = Accounts.create_workplace(user, "some workplace")
+      assert {:error, _} = Accounts.add_workplace(user, workplace, "user")
     end
   end
 end

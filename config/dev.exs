@@ -3,9 +3,10 @@ import Config
 # Configure your database
 config :exagon, Exagon.Repo,
   username: "postgres",
-  password: "postgres",
+  password: "postgrespw",
   hostname: "localhost",
   database: "exagon_dev",
+  port: 55000,
   stacktrace: true,
   show_sensitive_data_on_connection_error: true,
   pool_size: 10

@@ -1,11 +1,12 @@
 defmodule Exagon.Accounts.Role do
   use Exagon.Schema
 
-  alias Exagon.Accounts.User
+  alias Exagon.Accounts.{User, Workplace}
 
   schema "roles" do
-    field :role_name, :string
+    field :name, :string
     belongs_to :user, User
+    belongs_to :workplace, Workplace
 
     timestamps()
   end
@@ -13,7 +14,9 @@ defmodule Exagon.Accounts.Role do
   @doc false
   def create_changeset(role, attrs \\ []) do
     role
-    |> cast(attrs, [:role_name])
-    |> validate_required([:role_name])
+    |> cast(attrs, [:name])
+    |> validate_required([:name])
+    |> validate_inclusion(:name, ["admin", "owner", "user", "guest"])
+    |> unique_constraint([:user, :workplace, :name], name: "roles_user_id_workplace_id_index")
   end
 end

@@ -22,7 +22,7 @@ defmodule ExagonWeb.UserConfirmationControllerTest do
   import Exagon.AccountsFixtures
 
   setup do
-    %{user: user_fixture()}
+    %{user: admin_fixture()}
   end
 
   describe "GET /users/confirm" do
