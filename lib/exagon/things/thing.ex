@@ -6,6 +6,11 @@ defmodule Exagon.Things.Thing do
   schema "things" do
     field :type, :string
     field :uid, :string
+
+    field :status, Ecto.Enum,
+      values: [:uninitialized, :initializing, :available, :online, :offline, :unknown]
+
+    field :status_detail, :string
     belongs_to :workplace, Workplace
 
     timestamps()
@@ -14,7 +19,7 @@ defmodule Exagon.Things.Thing do
   @doc false
   def changeset(thing, attrs) do
     thing
-    |> cast(attrs, [])
-    |> validate_required([])
+    |> cast(attrs, [:type, :uid, :status, :status_detail])
+    |> validate_required([:type, :uid, :status])
   end
 end

@@ -1,0 +1,21 @@
+@startuml
+hide empty description
+[*] --> :uninitialized
+:uninitialized --> :initializing : Initialize
+:uninitialized --> :uninitialized
+:initializing --> :available
+:initializing --> :uninitialized
+
+state Running {
+    :online --> OFFLINE
+    :online --> UNKNOWN
+    OFFLINE --> UNKNOWN
+    OFFLINE --> :online
+    UNKNOWN --> OFFLINE
+    UNKNOWN --> :online
+}
+
+:available --> Running : Start
+Running --> :available : Stop
+
+@enduml
