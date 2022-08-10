@@ -7,12 +7,12 @@ hide empty description
 :initializing --> :uninitialized
 
 state Running {
-    :online --> OFFLINE
-    :online --> UNKNOWN
-    OFFLINE --> UNKNOWN
-    OFFLINE --> :online
-    UNKNOWN --> OFFLINE
-    UNKNOWN --> :online
+    :online --> :offline
+    :online --> :unknown
+    :offline --> :unknown
+    :offline --> :online
+    :unknown --> :offline
+    :unknown --> :online
 }
 
 :available --> Running : Start
