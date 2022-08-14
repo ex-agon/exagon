@@ -15,9 +15,9 @@ defmodule Exagon.Application do
       # Start the PubSub system
       {Phoenix.PubSub, name: Exagon.PubSub},
       # Start the Endpoint (http/https)
-      ExagonWeb.Endpoint
+      ExagonWeb.Endpoint,
       # Start a worker by calling: Exagon.Worker.start_link(arg)
-      # {Exagon.Worker, arg}
+      Exagon.Bindings
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html
