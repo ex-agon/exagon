@@ -10,12 +10,12 @@ config :bcrypt_elixir, :log_rounds, 1
 # Run `mix help test` for more information.
 config :exagon, Exagon.Repo,
   username: System.get_env("POSTGRES_USER") || "postgres",
-  password: System.get_env("POSTGRES_PASSWORD") || "postgrespw",
+  password: System.get_env("POSTGRES_PASSWORD") || "postgres",
   database:
     System.get_env("POSTGRES_DB") ||
       "exagon_test#{System.get_env("MIX_TEST_PARTITION")}",
   hostname: System.get_env("POSTGRES_HOST") || "localhost",
-  port: System.get_env("POSTGRES_PORT") || 55000,
+  port: System.get_env("POSTGRES_PORT") || 5432,
   pool: Ecto.Adapters.SQL.Sandbox,
   pool_size: 10
 
