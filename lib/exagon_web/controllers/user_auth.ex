@@ -166,7 +166,7 @@ defmodule ExagonWeb.UserAuth do
       conn
       |> put_flash(
         :error,
-        ExagonWeb.Gettext.gettext(
+        Exagon.Gettext.gettext(
           "Exagon has not been configured yet. Please register an admin account first"
         )
       )

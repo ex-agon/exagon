@@ -96,7 +96,7 @@ defmodule ExagonWeb do
   def channel do
     quote do
       use Phoenix.Channel
-      import ExagonWeb.Gettext
+      import Exagon.Gettext
     end
   end
 
