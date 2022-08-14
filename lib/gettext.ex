@@ -14,14 +14,14 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 
-defmodule ExagonWeb.Gettext do
+defmodule Exagon.Gettext do
   @moduledoc """
   A module providing Internationalization with a gettext-based API.
 
   By using [Gettext](https://hexdocs.pm/gettext),
   your module gains a set of macros for translations, for example:
 
-      import ExagonWeb.Gettext
+      import Exagon.Gettext
 
       # Simple translation
       gettext("Here is the string to translate")

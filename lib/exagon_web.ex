@@ -38,7 +38,7 @@ defmodule ExagonWeb do
       use Phoenix.Controller, namespace: ExagonWeb
 
       import Plug.Conn
-      import ExagonWeb.Gettext
+      import Exagon.Gettext
       alias ExagonWeb.Router.Helpers, as: Routes
     end
   end
@@ -112,7 +112,7 @@ defmodule ExagonWeb do
       import Phoenix.View
 
       import ExagonWeb.ErrorHelpers
-      import ExagonWeb.Gettext
+      import Exagon.Gettext
       alias ExagonWeb.Router.Helpers, as: Routes
     end
   end

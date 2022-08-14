@@ -15,7 +15,7 @@
 # SPDX-License-Identifier: Apache-2.0
 
 defmodule ExagonWeb.UserAuth do
-  import ExagonWeb.Gettext
+  import Exagon.Gettext
   import Plug.Conn
   import Phoenix.Controller
 
