@@ -1,0 +1,28 @@
+@startuml "Thing model"
+
+class Binding
+
+class ThingDef {
+    name: String
+    label: String
+    description: name
+}
+
+class PropertyDef {
+    name: String
+    label: String
+    description: String
+}
+
+class ChannelDef {
+    name: String
+    label: String
+    description: String
+}
+
+Binding ..> ThingDef : defines
+ThingDef "1" *-> "0..n" PropertyDef
+ThingDef "1" *-> "0..n" ChannelDef 
+ThingDef --> "0..1" ThingDef : gatewayType
+
+@enduml
